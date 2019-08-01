@@ -120,11 +120,15 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
 
 STATIC_URL = '/static/'
-LOGIN_REDIRECT_URL ='/'
-# LOGOUT_REDIRECT_URL =''
+LOGIN_REDIRECT_URL ='home'
+LOGOUT_REDIRECT_URL ='/'
 
 #Email Host Definition
 EMAIL_HOST = 'smtp.mailtrap.io'
 EMAIL_HOST_USER = 'bc160348c12200'
 EMAIL_HOST_PASSWORD = 'bb3a1902828906'
 EMAIL_PORT = '2525'
+
+#File
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')

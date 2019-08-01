@@ -1,7 +1,7 @@
 from django.shortcuts import render,redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import UserCreationForm
-from .forms import RegistrationForm
+from .forms import RegistrationForm, noteForm
 from django.http import HttpResponse
 from django.contrib.sites.shortcuts import get_current_site
 from django.utils.encoding import force_bytes,force_text
@@ -65,3 +65,14 @@ def activate(request, uidb64, token):
         return HttpResponse('Thank you for your email confirmation. Now you can login your account')
     else:
         return HttpResponse('Activation link is invalid')
+
+@login_required()
+def addNote(request):
+    if request.method == "POST" :
+        form = noteForm(request.POST, request.FILES)
+        if form.is_valid:
+            form.save()
+            return redirect('home')
+    else:
+        form = noteForm()
+        return render(request, "notes.html",{'form':form})
