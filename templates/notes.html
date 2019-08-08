@@ -6,12 +6,30 @@
     <link rel="stylesheet" type="text/css" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 </head>
 <body>
-<form method="POST" action="" enctype="multipart/form-data">
+{% include 'base2.html' %}
+
+<h3>Add notes here</h3>
+<form method="POST" action="" enctype="multipart/form-data" id="NoteForm" data-subject-url="{% url 'ajax_load_subject' %}" novalidate>
     {% csrf_token %}
     {{ form }}
-    <button type="submit">Add Notes</button>
-
+    <button type="submit">Add </button>
 </form>
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+    <script>
+        $("#id_level").change(function () {
+            var url = $("#NoteForm").attr("data-subject-url");
+            var levelId = $(this).val();
+            $.ajax({
+                url:url,
+                data:{
+                    'level':levelId
+                },
+                success: function (data) {
+                    $("#id_subject").html(data);
+                }
+            });
+        });
+    </script>
 
 </body>
 </html>

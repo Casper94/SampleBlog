@@ -1,7 +1,7 @@
 from django.shortcuts import render,redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import UserCreationForm
-from .forms import RegistrationForm, noteForm
+from .forms import RegistrationForm, NoteForm, LevelForm, SubjectForm
 from django.http import HttpResponse
 from django.contrib.sites.shortcuts import get_current_site
 from django.utils.encoding import force_bytes,force_text
@@ -10,6 +10,7 @@ from django.template.loader import render_to_string
 from .tokens import account_activation_token
 from django.contrib.auth.models import User
 from django.core.mail import EmailMessage
+from .models import Subject, Note
 
 
 
@@ -69,10 +70,43 @@ def activate(request, uidb64, token):
 @login_required()
 def addNote(request):
     if request.method == "POST" :
-        form = noteForm(request.POST, request.FILES)
+        form = NoteForm(request.POST, request.FILES)
         if form.is_valid:
             form.save()
             return redirect('home')
     else:
-        form = noteForm()
+        form = NoteForm()
         return render(request, "notes.html",{'form':form})
+
+
+def addSubject(request):
+    if request.method == "POST" :
+        form = SubjectForm(request.POST)
+        if form.is_valid:
+            form.save()
+            return redirect('home')
+    else:
+        form = SubjectForm()
+        return render(request, "notes.html",{'form':form})
+
+
+def addLevel(request):
+    if request.method == "POST" :
+        form = LevelForm(request.POST)
+        if form.is_valid:
+            form.save()
+            return redirect('home')
+    else:
+        form = LevelForm()
+        return render(request, "notes.html",{'form':form})
+
+
+def showNotes(request):
+    notes = Note.objects.all()
+    return render(request,"notes.html",{'note':notes})
+
+
+def load_subject(request):
+    level_id = request.GET.get('level')
+    subject = Subject.objects.filter(level= level_id).order_by('document')
+    return render(request,'notes.html',{'subject':subject})
